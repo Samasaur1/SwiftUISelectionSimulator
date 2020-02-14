@@ -17,7 +17,15 @@ class GameScene: SKScene {
     var lastReproductionTime: TimeInterval = 0
     var points: [CGPoint] = []
     var organisms: [Organism] = []
-    
+
+    var comparisonType: KeyPath<GeneValues, Double> = \.sides
+
+    func settingComparisonType(to ct: KeyPath<GeneValues, Double>) -> GameScene {
+        comparisonType = ct
+        print("setting ct to \(ct) on \(Unmanaged.passUnretained(self).toOpaque())")
+        return self
+    }
+
     override func didMove(to view: SKView) {
         let r = self.frame.width/2
         let vR = self.frame.height/2
@@ -68,6 +76,8 @@ class GameScene: SKScene {
 
             organisms.shuffle()
             organisms.sort { $0.genes.effectiveGenes.sides > $1.genes.effectiveGenes.sides }
+            organisms.sort { $0.genes.effectiveGenes[keyPath: comparisonType] > $1.genes.effectiveGenes[keyPath: comparisonType] }
+            print("[\(Unmanaged.passUnretained(self).toOpaque())] \(comparisonType)")
             while organisms.count > points.count {
                 organisms.removeLast().die()
             }

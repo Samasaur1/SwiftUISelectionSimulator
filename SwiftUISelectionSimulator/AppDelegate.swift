@@ -34,6 +34,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
 
+    static let gameScene: GameScene = GameScene()
 
 }
 
+extension KeyPath: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case \GeneValues.size: return "\\GeneValues.size"
+        case \GeneValues.sides: return "\\GeneValues.sides"
+        case \GeneValues.hue: return "\\GeneValues.hue"
+        default: return "Swift.KeyPath<\(Root.self), \(Value.self)"
+        }
+    }
+}

@@ -10,9 +10,23 @@ import SwiftUI
 import SpriteKit
 import AppKit
 
+
 struct ContentView: View {
+    let comparisonKeyPaths = [\GeneValues.sides, \GeneValues.hue, \GeneValues.size]
+    let lookupTable = [\GeneValues.sides: "Number of Sides", \GeneValues.hue: "Hue", \GeneValues.size: "Size"]
+    @State var selection = \GeneValues.sides
     var body: some View {
         return SceneView(scene: GameScene())
+        return VStack {
+            HStack {
+                Picker("Primary Selection Type", selection: $selection) {
+                    ForEach(comparisonKeyPaths, id: \.self) { kp in
+                        Text(self.lookupTable[kp]!)
+                    }
+                }
+            }
+            SceneView(scene: AppDelegate.gameScene.settingComparisonType(to: selection))
+        }
     }
 }
 struct SceneView: NSViewRepresentable {
