@@ -20,6 +20,8 @@ struct ContentView: View {
     let comparisonLookupTable: [String: (Double, Double) -> Bool] = ["Ascending": (<), "Descending": (>)]
     @State var comparison = "Ascending"
 
+    @State var speed: Double = 1
+
     var body: some View {
         return VStack {
             HStack {
@@ -32,9 +34,16 @@ struct ContentView: View {
                     ForEach(comparisons, id: \.self) { comp in
                         Text(comp)
                     }
-                }
+                }.pickerStyle(RadioGroupPickerStyle())
+                Picker("", selection: $speed) {
+                    Text("􀊃").tag(0.5)
+                    Text("􀊄").tag(1.0)
+                    Text("􀊌 (2x)").tag(2.0)
+                    Text("􀊌 (4x)").tag(4.0)
+                    Text("􀊌 (8x)").tag(8.0)
+                }.pickerStyle(SegmentedPickerStyle())
             }
-            SceneView(scene: AppDelegate.gameScene.settingComparisonType(to: selection, inMode: comparisonLookupTable[comparison]!))
+            SceneView(scene: AppDelegate.gameScene.settingComparisonType(to: selection, inMode: comparisonLookupTable[comparison]!).settingSpeed(to: speed))
         }
     }
 }

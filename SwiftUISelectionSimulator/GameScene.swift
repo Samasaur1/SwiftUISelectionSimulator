@@ -21,10 +21,17 @@ class GameScene: SKScene {
     var comparisonType: KeyPath<GeneValues, Double> = \.sides
     var comparator: (Double, Double) -> Bool = (>)
 
+    var speedMultiplier: Double = 1
+
     func settingComparisonType(to ct: KeyPath<GeneValues, Double>, inMode m: @escaping (Double, Double) -> Bool) -> GameScene {
         comparisonType = ct
         comparator = m
         print("setting ct to \(ct) in mode \(m(1, 2) ? "A" : "D") on \(Unmanaged.passUnretained(self).toOpaque())")
+        return self
+    }
+
+    func settingSpeed(to s: Double) -> GameScene {
+        speedMultiplier = s
         return self
     }
 
@@ -61,7 +68,7 @@ class GameScene: SKScene {
 
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-        if currentTime > lastMovementTime + 5 {
+        if currentTime > lastMovementTime + (5/speedMultiplier) {
             lastMovementTime = currentTime
             lastDeathTime = currentTime
             lastReproductionTime = currentTime
@@ -70,9 +77,9 @@ class GameScene: SKScene {
 //                o.position = p
 //            }
             for (o, p) in zip(organisms, points) {
-                o.move(to: p)
+                o.move(to: p, duration: 1/speedMultiplier)
             }
-        } else if currentTime > lastDeathTime + 3 {
+        } else if currentTime > lastDeathTime + (3/speedMultiplier) {
             lastDeathTime = currentTime
             lastReproductionTime = currentTime
 
@@ -80,9 +87,9 @@ class GameScene: SKScene {
             organisms.sort { comparator($0.genes.effectiveGenes[keyPath: comparisonType], $1.genes.effectiveGenes[keyPath: comparisonType]) }
             print("[\(Unmanaged.passUnretained(self).toOpaque())] \(comparisonType) (\(comparator(1, 2) ? "A" : "D"))")
             while organisms.count > points.count {
-                organisms.removeLast().die()
+                organisms.removeLast().die(duration: 1/speedMultiplier)
             }
-        } else if currentTime > lastReproductionTime + 2 {
+        } else if currentTime > lastReproductionTime + (2/speedMultiplier) {
             lastReproductionTime = currentTime
             for i in stride(from: 0, to: organisms.count - 1, by: 2) {
                 let o = Organism.from(parents: organisms[i], and: organisms[i + 1])
