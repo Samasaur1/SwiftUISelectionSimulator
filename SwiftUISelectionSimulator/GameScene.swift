@@ -19,10 +19,12 @@ class GameScene: SKScene {
     var organisms: [Organism] = []
 
     var comparisonType: KeyPath<GeneValues, Double> = \.sides
+    var comparator: (Double, Double) -> Bool = (>)
 
-    func settingComparisonType(to ct: KeyPath<GeneValues, Double>) -> GameScene {
+    func settingComparisonType(to ct: KeyPath<GeneValues, Double>, inMode m: @escaping (Double, Double) -> Bool) -> GameScene {
         comparisonType = ct
-        print("setting ct to \(ct) on \(Unmanaged.passUnretained(self).toOpaque())")
+        comparator = m
+        print("setting ct to \(ct) in mode \(m(1, 2) ? "A" : "D") on \(Unmanaged.passUnretained(self).toOpaque())")
         return self
     }
 
@@ -75,9 +77,8 @@ class GameScene: SKScene {
             lastReproductionTime = currentTime
 
             organisms.shuffle()
-            organisms.sort { $0.genes.effectiveGenes.sides > $1.genes.effectiveGenes.sides }
-            organisms.sort { $0.genes.effectiveGenes[keyPath: comparisonType] > $1.genes.effectiveGenes[keyPath: comparisonType] }
-            print("[\(Unmanaged.passUnretained(self).toOpaque())] \(comparisonType)")
+            organisms.sort { comparator($0.genes.effectiveGenes[keyPath: comparisonType], $1.genes.effectiveGenes[keyPath: comparisonType]) }
+            print("[\(Unmanaged.passUnretained(self).toOpaque())] \(comparisonType) (\(comparator(1, 2) ? "A" : "D"))")
             while organisms.count > points.count {
                 organisms.removeLast().die()
             }

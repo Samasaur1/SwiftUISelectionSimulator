@@ -15,8 +15,12 @@ struct ContentView: View {
     let comparisonKeyPaths = [\GeneValues.sides, \GeneValues.hue, \GeneValues.size]
     let lookupTable = [\GeneValues.sides: "Number of Sides", \GeneValues.hue: "Hue", \GeneValues.size: "Size"]
     @State var selection = \GeneValues.sides
+
+    let comparisons = ["Ascending", "Descending"]
+    let comparisonLookupTable: [String: (Double, Double) -> Bool] = ["Ascending": (<), "Descending": (>)]
+    @State var comparison = "Ascending"
+
     var body: some View {
-        return SceneView(scene: GameScene())
         return VStack {
             HStack {
                 Picker("Primary Selection Type", selection: $selection) {
@@ -24,8 +28,13 @@ struct ContentView: View {
                         Text(self.lookupTable[kp]!)
                     }
                 }
+                Picker("Mode", selection: $comparison) {
+                    ForEach(comparisons, id: \.self) { comp in
+                        Text(comp)
+                    }
+                }
             }
-            SceneView(scene: AppDelegate.gameScene.settingComparisonType(to: selection))
+            SceneView(scene: AppDelegate.gameScene.settingComparisonType(to: selection, inMode: comparisonLookupTable[comparison]!))
         }
     }
 }
