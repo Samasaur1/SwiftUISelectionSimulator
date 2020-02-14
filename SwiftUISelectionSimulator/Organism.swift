@@ -28,8 +28,8 @@ class Organism {
 //        self.scene?.addChild(self.node)
 //    }
 
-    static func from(parents p1: Organism, and p2: Organism) -> Organism {
-        return Organism(with: GeneSetPair.from(p1.genes, and: p2.genes), in: p1.scene ?? p2.scene)
+    static func from(parents p1: Organism, and p2: Organism) throws -> Organism {
+        return Organism(with: try GeneSetPair.from(p1.genes, and: p2.genes), in: p1.scene ?? p2.scene)
     }
 
     var position: CGPoint {
@@ -70,15 +70,15 @@ struct GeneSet {
 //        self.sides = sides
 //    }
 
-    func mutated() -> GeneSet {
+    func mutated() throws -> GeneSet {
         var arr = array
         let i = Int.random(in: 0..<arr.count)
-        arr[i].mutate()
+        try arr[i].mutate()
         return GeneSet(size: arr[0], sides: arr[1], hue: arr[2])
     }
 
-    mutating func mutate() {
-        self = self.mutated()
+    mutating func mutate() throws {
+        self = try self.mutated()
     }
 
     var array: [Gene] {
@@ -135,14 +135,14 @@ struct GeneSetPair {
         return GeneValues(size: size, sides: sides, hue: hue)
     }
 
-    static func from(_ set1: GeneSetPair, and set2: GeneSetPair) -> GeneSetPair {
-        return withAProbabilityOf(0.5, return: {
+    static func from(_ set1: GeneSetPair, and set2: GeneSetPair) throws -> GeneSetPair {
+        return try withAProbabilityOf(0.5, return: {
             var new1 = set1.genesToPassOn()
             var new2 = set2.genesToPassOn()
             if Bool.random() {
-                new1.mutate()
+                try new1.mutate()
             } else {
-                new2.mutate()
+                try new2.mutate()
             }
             return GeneSetPair(set1: new1, set2: new2)
         }, else: {
@@ -181,42 +181,51 @@ enum Gene {
     case number(Double)
     case multiplier(Double)
 
-    func mutated() -> Gene {
+    func mutated() throws -> Gene {
         switch self {
         case let .number(value):
-            return withAProbabilityOf(0.1, return: {
+            return try withAProbabilityOf(0.1, return: {
                 return Gene.multiplier(value / Gene.DEFAULT_NUMBER)
             }, else: {
-                return Gene.number(value + (Bool.random() ? Gene.NUMBER_VARIANCE : -Gene.NUMBER_VARIANCE))
+                let newValue = value + (Bool.random() ? Gene.NUMBER_VARIANCE : -Gene.NUMBER_VARIANCE)
+                if newValue == 0 { throw GeneIsZeroError() }
+                if newValue < 0 { throw GeneIsNegativeError() }
+                return Gene.number(newValue)
             })
         case let .multiplier(mul):
-            return withAProbabilityOf(0.1, return: {
+            return try withAProbabilityOf(0.1, return: {
                 return Gene.number(mul * Gene.DEFAULT_NUMBER)
             }, else: {
-                return Gene.multiplier(mul + (Bool.random() ? Gene.MULTIPLIER_VARIANCE : -Gene.MULTIPLIER_VARIANCE))
+                let newMul = mul + (Bool.random() ? Gene.MULTIPLIER_VARIANCE : -Gene.MULTIPLIER_VARIANCE)
+                if newMul == 0 { throw GeneIsZeroError() }
+                if newMul < 0 { throw GeneIsNegativeError() }
+                return Gene.multiplier(newMul)
             })
         }
     }
 
-    mutating func mutate() {
-        self = self.mutated()
+    mutating func mutate() throws {
+        self = try self.mutated()
     }
 }
 
+struct GeneIsZeroError: Error {}
+struct GeneIsNegativeError: Error {}
 
-public func withAProbabilityOf(_ probability: Double, do ifTrue: () -> Void, else ifFalse: () -> Void) {
+
+public func withAProbabilityOf(_ probability: Double, do ifTrue: () throws -> Void, else ifFalse: () throws -> Void) rethrows {
     if Double.random(in: 0...1) <= probability {
-        ifTrue()
+        try ifTrue()
     } else {
-        ifFalse()
+        try ifFalse()
     }
 }
 
-public func withAProbabilityOf<ReturnType>(_ probability: Double, return ifTrue: () -> ReturnType, else ifFalse: () -> ReturnType) -> ReturnType {
+public func withAProbabilityOf<ReturnType>(_ probability: Double, return ifTrue: () throws -> ReturnType, else ifFalse: () throws -> ReturnType) rethrows -> ReturnType {
     if Double.random(in: 0...1) <= probability {
-        return ifTrue()
+        return try ifTrue()
     } else {
-        return ifFalse()
+        return try ifFalse()
     }
 }
 

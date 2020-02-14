@@ -92,11 +92,14 @@ class GameScene: SKScene {
         } else if currentTime > lastReproductionTime + (2/speedMultiplier) {
             lastReproductionTime = currentTime
             for i in stride(from: 0, to: organisms.count - 1, by: 2) {
-                let o = Organism.from(parents: organisms[i], and: organisms[i + 1])
-                o.position = organisms[i].position
-                o.position.x += 50
-                o.position.y -= 25
-                organisms.append(o)
+                if let o = try? Organism.from(parents: organisms[i], and: organisms[i + 1]) {
+                    o.position = organisms[i].position
+                    o.position.x += 50
+                    o.position.y -= 25
+                    organisms.append(o)
+                } else {
+                    print("Organisms tried to have a child, but failed!")
+                }
             }
         }
     }
