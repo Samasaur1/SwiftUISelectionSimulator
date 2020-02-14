@@ -230,6 +230,10 @@ public func withAProbabilityOf<ReturnType>(_ probability: Double, return ifTrue:
 }
 
 public func nGon(sides n: Int, sideLength l: Double) -> SKShapeNode {
+    guard n > 0 else {
+        print("Attempted to generate nGon with 0 sides!")
+        return SKShapeNode(rectOf: .init(width: l, height: l), cornerRadius: CGFloat(l/4))
+    }
     let alpha = Double.pi * 2 / Double(n)
 
     var points: [CGPoint] = [CGPoint.zero]
