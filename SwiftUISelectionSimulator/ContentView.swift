@@ -18,7 +18,7 @@ struct ContentView: View {
 
     let comparisons = ["Ascending", "Descending"]
     let comparisonLookupTable: [String: (Double, Double) -> Bool] = ["Ascending": (<), "Descending": (>)]
-    @State var comparison = "Ascending"
+    @State var comparison = "Descending"
 
     @State var speed: Double = 1
 
@@ -36,8 +36,8 @@ struct ContentView: View {
                     }
                 }.pickerStyle(RadioGroupPickerStyle())
                 Picker("", selection: $speed) {
-                    Text("􀊃").tag(0.5)
-                    Text("􀊄").tag(1.0)
+                    Text("􀊃 (0.5x)").tag(0.5)
+                    Text("􀊄 (1x)").tag(1.0)
                     Text("􀊌 (2x)").tag(2.0)
                     Text("􀊌 (4x)").tag(4.0)
                     Text("􀊌 (8x)").tag(8.0)
