@@ -32,6 +32,7 @@ class GameScene: SKScene {
 
     func settingSpeed(to s: Double) -> GameScene {
         speedMultiplier = s
+        print("setting speed to \(s)x")
         return self
     }
 
@@ -85,7 +86,7 @@ class GameScene: SKScene {
 
             organisms.shuffle()
             organisms.sort { comparator($0.genes.effectiveGenes[keyPath: comparisonType], $1.genes.effectiveGenes[keyPath: comparisonType]) }
-            print("[\(Unmanaged.passUnretained(self).toOpaque())] \(comparisonType) (\(comparator(1, 2) ? "A" : "D"))")
+            print("[\(Unmanaged.passUnretained(self).toOpaque())] \(comparisonType) (\(comparator(1, 2) ? "A" : "D")) (\(speedMultiplier)x)")
             while organisms.count > points.count {
                 organisms.removeLast().die(duration: 1/speedMultiplier)
             }
