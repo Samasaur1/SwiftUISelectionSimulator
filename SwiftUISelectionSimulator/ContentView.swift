@@ -42,8 +42,14 @@ struct ContentView: View {
                     Text("􀊌 (4x)").tag(4.0)
                     Text("􀊌 (8x)").tag(8.0)
                 }.pickerStyle(SegmentedPickerStyle())
+                Button(action: {
+                    //TODO: Reset somehow
+                    AppDelegate.shared.reset()
+                }) {
+                    Text("Restart Simulation")
+                }
             }
-            SceneView(scene: AppDelegate.gameScene.settingComparisonType(to: selection, inMode: comparisonLookupTable[comparison]!).settingSpeed(to: speed))
+            SceneView(scene: AppDelegate.shared.gameScene.settingComparisonType(to: selection, inMode: comparisonLookupTable[comparison]!).settingSpeed(to: speed))
         }
     }
 }
