@@ -18,21 +18,25 @@ class GameScene: SKScene {
     var points: [CGPoint] = []
     var organisms: [Organism] = []
 
-    var comparisonType: KeyPath<GeneValues, Double> = \.sides
-    var comparator: (Double, Double) -> Bool = (>)
+    var genePath: KeyPath<Organism, Double> = \.genes.effectiveGenes.sides
+    var selector: (inout [Organism], KeyPath<Organism, Double>) -> Void = { arr, kp in
+        arr.sort { $0[keyPath: kp] < $1[keyPath: kp] }
+    }
 
     var speedMultiplier: Double = 1
 
-    func settingComparisonType(to ct: KeyPath<GeneValues, Double>, inMode m: @escaping (Double, Double) -> Bool) -> GameScene {
-        comparisonType = ct
-        comparator = m
-        print("setting ct to \(ct) in mode \(m(1, 2) ? "A" : "D") on \(Unmanaged.passUnretained(self).toOpaque())")
+    func settingGene(to g: KeyPath<Organism, Double>) -> GameScene {
+        genePath = g
+        return self
+    }
+
+    func settingSelectionType(to s: @escaping (inout [Organism], KeyPath<Organism, Double>) -> Void) -> GameScene {
+        selector = s
         return self
     }
 
     func settingSpeed(to s: Double) -> GameScene {
         speedMultiplier = s
-        print("setting speed to \(s)x")
         return self
     }
 
@@ -81,8 +85,7 @@ class GameScene: SKScene {
             lastReproductionTime = currentTime
 
             organisms.shuffle()
-            organisms.sort { comparator($0.genes.effectiveGenes[keyPath: comparisonType], $1.genes.effectiveGenes[keyPath: comparisonType]) }
-            print("[\(Unmanaged.passUnretained(self).toOpaque())] \(comparisonType) (\(comparator(1, 2) ? "A" : "D")) (\(speedMultiplier)x)")
+            selector(&organisms, genePath)
             while organisms.count > points.count {
                 organisms.removeLast().die(duration: 1/speedMultiplier)
             }

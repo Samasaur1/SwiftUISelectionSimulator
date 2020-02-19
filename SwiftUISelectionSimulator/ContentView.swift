@@ -12,26 +12,41 @@ import AppKit
 
 
 struct ContentView: View {
-    let comparisonKeyPaths = [\GeneValues.sides, \GeneValues.hue, \GeneValues.size]
-    let lookupTable = [\GeneValues.sides: "Number of Sides", \GeneValues.hue: "Hue", \GeneValues.size: "Size"]
-    @State var selection = \GeneValues.sides
+    let geneKeyPaths = [\Organism.genes.effectiveGenes.sides, \Organism.genes.effectiveGenes.hue, \Organism.genes.effectiveGenes.size]
+    let geneKeyPathLabelLookupTable = [\Organism.genes.effectiveGenes.sides: "Number of Sides", \Organism.genes.effectiveGenes.hue: "Hue", \Organism.genes.effectiveGenes.size: "Size"]
+    @State var geneKeyPathSelection = \Organism.genes.effectiveGenes.sides
 
-    let comparisons = ["Ascending", "Descending"]
-    let comparisonLookupTable: [String: (Double, Double) -> Bool] = ["Ascending": (<), "Descending": (>)]
-    @State var comparison = "Descending"
+    let selectionTypes = ["Directional (Ascending)", "Directional (Descending)", "Disruptive", "Stabilizing"]
+    let selectionTypeFunctionLookupTable: [String: (inout [Organism], KeyPath<Organism, Double>) -> Void] = [
+        "Directional (Ascending)": { arr, kp in
+            arr.sort { $0[keyPath: kp] < $1[keyPath: kp] }
+        },
+        "Directional (Descending)": { arr, kp in
+            arr.sort { $0[keyPath: kp] > $1[keyPath: kp] }
+        },
+        "Disruptive": { arr, kp in
+            let average = arr.average { $0[keyPath: kp] }
+            arr.sort { abs($0[keyPath: kp] - average) > abs($1[keyPath: kp] - average) }
+        },
+        "Stabilizing": { arr, kp in
+            let average = arr.average { $0[keyPath: kp] }
+            arr.sort { abs($0[keyPath: kp] - average) < abs($1[keyPath: kp] - average) }
+        }
+    ]
+    @State var selectionType = "Directional (Descending)"
 
     @State var speed: Double = 1
 
     var body: some View {
         return VStack {
             HStack {
-                Picker("Primary Selection Type", selection: $selection) {
-                    ForEach(comparisonKeyPaths, id: \.self) { kp in
-                        Text(self.lookupTable[kp]!)
+                Picker("Primary Selection Type", selection: $geneKeyPathSelection) {
+                    ForEach(geneKeyPaths, id: \.self) { kp in
+                        Text(self.geneKeyPathLabelLookupTable[kp]!)
                     }
                 }
-                Picker("Mode", selection: $comparison) {
-                    ForEach(comparisons, id: \.self) { comp in
+                Picker("Mode", selection: $selectionType) {
+                    ForEach(selectionTypes, id: \.self) { comp in
                         Text(comp)
                     }
                 }.pickerStyle(RadioGroupPickerStyle())
@@ -48,7 +63,10 @@ struct ContentView: View {
                     Text("Restart Simulation")
                 }
             }
-            SceneView(scene: AppDelegate.shared.gameScene.settingComparisonType(to: selection, inMode: comparisonLookupTable[comparison]!).settingSpeed(to: speed))
+            SceneView(scene: AppDelegate.shared.gameScene
+                .settingGene(to: geneKeyPathSelection)
+                .settingSelectionType(to: selectionTypeFunctionLookupTable[selectionType]!)
+                .settingSpeed(to: speed))
         }
     }
 }
