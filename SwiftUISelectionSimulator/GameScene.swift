@@ -60,7 +60,6 @@ class GameScene: SKScene {
         for _ in 0..<2 {
             organisms.append(Organism(with: GeneSetPair.default(), in: self))
         }
-//        organisms.append(Organism(with: GeneSetPair(set1: GeneSet(size: .number(10), sides: .number(10), red: .multiplier(3), green: .number(10), blue: .number(40)), set2: GeneSet(size: .number(10), sides: .number(10), red: .multiplier(3), green: .number(10), blue: .multiplier(0.25))), in: self))
 
         for (o, p) in zip(organisms, points) {
             o.position = p
@@ -74,9 +73,6 @@ class GameScene: SKScene {
             lastDeathTime = currentTime
             lastReproductionTime = currentTime
 
-//            for (o, p) in zip(organisms, points) {
-//                o.position = p
-//            }
             for (o, p) in zip(organisms, points) {
                 o.move(to: p, duration: 1/speedMultiplier)
             }

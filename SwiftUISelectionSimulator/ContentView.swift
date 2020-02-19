@@ -43,7 +43,6 @@ struct ContentView: View {
                     Text("􀊌 (8x)").tag(8.0)
                 }.pickerStyle(SegmentedPickerStyle())
                 Button(action: {
-                    //TODO: Reset somehow
                     AppDelegate.shared.reset()
                 }) {
                     Text("Restart Simulation")
