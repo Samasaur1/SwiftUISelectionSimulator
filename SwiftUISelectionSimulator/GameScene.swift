@@ -46,7 +46,7 @@ class GameScene: SKScene {
 
         for x in stride(from: -r + 100, through: r, by: 100) { //150
             for y in stride(from: -vR + 100, through: vR, by: 100) { //150
-                points.append(CGPoint(x: x - 50, y: y - 50)) //75
+                points.append(CGPoint(x: x - 50, y: y)) //75
             }
         }
 

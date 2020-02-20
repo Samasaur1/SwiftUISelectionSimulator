@@ -40,34 +40,43 @@ struct ContentView: View {
     var body: some View {
         return VStack {
             HStack {
-                Picker("Primary Selection Type", selection: $geneKeyPathSelection) {
-                    ForEach(geneKeyPaths, id: \.self) { kp in
-                        Text(self.geneKeyPathLabelLookupTable[kp]!)
-                    }
-                }
-                Picker("Mode", selection: $selectionType) {
-                    ForEach(selectionTypes, id: \.self) { comp in
-                        Text(comp)
-                    }
-                }.pickerStyle(RadioGroupPickerStyle())
-                Picker("", selection: $speed) {
-                    Text("􀊃 (0.5x)").tag(0.5)
-                    Text("􀊄 (1x)").tag(1.0)
-                    Text("􀊌 (2x)").tag(2.0)
-                    Text("􀊌 (4x)").tag(4.0)
-                    Text("􀊌 (8x)").tag(8.0)
-                }.pickerStyle(SegmentedPickerStyle())
+                VStack {
+                    Text("Active Gene for Selection")
+                    Picker("Active Gene for Selection", selection: $geneKeyPathSelection) {
+                        ForEach(geneKeyPaths, id: \.self) { kp in
+                            Text(self.geneKeyPathLabelLookupTable[kp]!)
+                        }
+                    }.labelsHidden().pickerStyle(PopUpButtonPickerStyle())
+                }.padding(5).background(Color.white.opacity(0.25)).cornerRadius(10)
+                VStack {
+                    Text("Selection Type")
+                    Picker("Selection Type", selection: $selectionType) {
+                        ForEach(selectionTypes, id: \.self) { comp in
+                            Text(comp)
+                        }
+                        }.labelsHidden().pickerStyle(PopUpButtonPickerStyle())
+                }.padding(5).background(Color.white.opacity(0.25)).cornerRadius(10)
+                VStack {
+                    Picker("Speed", selection: $speed) {
+                        Text("􀊃 (0.5x)").tag(0.5)
+                        Text("􀊄 (1x)").tag(1.0)
+                        Text("􀊌 (2x)").tag(2.0)
+                        Text("􀊌 (4x)").tag(4.0)
+                        Text("􀊌 (8x)").tag(8.0)
+                    }.labelsHidden().pickerStyle(SegmentedPickerStyle())
+                }.padding(5).background(Color.white.opacity(0.25)).cornerRadius(10)
                 Button(action: {
                     AppDelegate.shared.reset()
                 }) {
                     Text("Restart Simulation")
                 }
-            }
+                }.padding(5).background(Color.gray).cornerRadius(10)
             SceneView(scene: AppDelegate.shared.gameScene
                 .settingGene(to: geneKeyPathSelection)
                 .settingSelectionType(to: selectionTypeFunctionLookupTable[selectionType]!)
                 .settingSpeed(to: speed))
-        }
+                .frame(width: 1024, height: 700, alignment: .center)
+        }.frame(width: 1250, height: 800, alignment: .center)
     }
 }
 struct SceneView: NSViewRepresentable {
