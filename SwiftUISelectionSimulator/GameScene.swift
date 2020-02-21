@@ -8,6 +8,7 @@
 
 import SpriteKit
 import GameplayKit
+import Combine
 
 typealias Family = (parent: Organism, parent2: Organism, child: Organism)
 
@@ -68,6 +69,8 @@ class GameScene: SKScene {
         for (o, p) in zip(organisms, points) {
             o.position = p
         }
+
+        stats = Statistics()
     }
 
     override func update(_ currentTime: TimeInterval) {
@@ -86,6 +89,7 @@ class GameScene: SKScene {
 
             organisms.shuffle()
             selector(&organisms, genePath)
+            updateStats()
             while organisms.count > points.count {
                 organisms.removeLast().die(duration: 1/speedMultiplier)
             }
@@ -99,8 +103,20 @@ class GameScene: SKScene {
                     organisms.append(o)
                 } else {
                     print("Organisms tried to have a child, but failed!")
+                    stats.miscarriages += 1
                 }
             }
+            stats.generation += 1
+        }
+    }
+
+    @Published private(set) var stats = Statistics()
+
+    func updateStats() {
+        for kp in [\Organism.genes.effectiveGenes.size, \Organism.genes.effectiveGenes.sides, \Organism.genes.effectiveGenes.hue] {
+            stats.geneStats[kp] = (min: organisms.map { $0[keyPath: kp] }.min()!,
+                                   average: organisms.average { $0[keyPath: kp] },
+                                   max: organisms.map { $0[keyPath: kp] }.max()!)
         }
     }
 }

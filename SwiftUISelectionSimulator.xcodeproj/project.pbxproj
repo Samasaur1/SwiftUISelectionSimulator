@@ -15,6 +15,7 @@
 		2266E5DC23EC989D00DF9CDF /* Organism.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2266E5DB23EC989D00DF9CDF /* Organism.swift */; };
 		2266E5DE23EC98C300DF9CDF /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2266E5DD23EC98C300DF9CDF /* GameScene.swift */; };
 		228AD4BB23FC4BF9003C5870 /* Array+Sum+Average.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228AD4BA23FC4BF9003C5870 /* Array+Sum+Average.swift */; };
+		22DF44EE240010BD00B5DD4B /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DF44ED240010BD00B5DD4B /* Statistics.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		2266E5DB23EC989D00DF9CDF /* Organism.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Organism.swift; sourceTree = "<group>"; };
 		2266E5DD23EC98C300DF9CDF /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		228AD4BA23FC4BF9003C5870 /* Array+Sum+Average.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Sum+Average.swift"; sourceTree = "<group>"; };
+		22DF44ED240010BD00B5DD4B /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 				2266E5D523EC96AA00DF9CDF /* SwiftUISelectionSimulator.entitlements */,
 				2266E5CE23EC96AA00DF9CDF /* Preview Content */,
 				228AD4BA23FC4BF9003C5870 /* Array+Sum+Average.swift */,
+				22DF44ED240010BD00B5DD4B /* Statistics.swift */,
 			);
 			path = SwiftUISelectionSimulator;
 			sourceTree = "<group>";
@@ -158,6 +161,7 @@
 				228AD4BB23FC4BF9003C5870 /* Array+Sum+Average.swift in Sources */,
 				2266E5DC23EC989D00DF9CDF /* Organism.swift in Sources */,
 				2266E5DE23EC98C300DF9CDF /* GameScene.swift in Sources */,
+				22DF44EE240010BD00B5DD4B /* Statistics.swift in Sources */,
 				2266E5C923EC96A800DF9CDF /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

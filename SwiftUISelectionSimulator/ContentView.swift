@@ -9,6 +9,7 @@
 import SwiftUI
 import SpriteKit
 import AppKit
+import Combine
 
 
 struct ContentView: View {
@@ -54,7 +55,7 @@ struct ContentView: View {
                         ForEach(selectionTypes, id: \.self) { comp in
                             Text(comp)
                         }
-                        }.labelsHidden().pickerStyle(PopUpButtonPickerStyle())
+                    }.labelsHidden().pickerStyle(PopUpButtonPickerStyle())
                 }.padding(5).background(Color.white.opacity(0.25)).cornerRadius(10)
                 VStack {
                     Picker("Speed", selection: $speed) {
@@ -70,21 +71,54 @@ struct ContentView: View {
                 }) {
                     Text("Restart Simulation")
                 }
-                }.padding(5).background(Color.gray).cornerRadius(10)
-            SceneView(scene: AppDelegate.shared.gameScene
-                .settingGene(to: geneKeyPathSelection)
-                .settingSelectionType(to: selectionTypeFunctionLookupTable[selectionType]!)
-                .settingSpeed(to: speed))
-                .frame(width: 1024, height: 700, alignment: .center)
+            }.padding(5).background(Color.gray).cornerRadius(10)
+            HStack {
+                VStack {
+                    Text("Statistics").underline().bold().font(.largeTitle)
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Generation:").bold()
+                            Text(String(statistics.generation))
+                        }
+                        HStack {
+                            Text("Miscarriages:").bold()
+                            Text(String(statistics.miscarriages))
+                        }
+                        ForEach(geneKeyPaths, id: \.self) { kp in
+                            VStack(alignment: .leading) {
+                                Text(self.geneKeyPathLabelLookupTable[kp]! + ":").bold()
+                                HStack {
+                                    Text("  Lowest:")
+                                    Text(String(format: "%.3f", locale: Locale.current, self.statistics.geneStats[kp]!.min))
+                                }
+                                HStack {
+                                    Text("  Average:")
+                                    Text(String(format: "%.3f", locale: Locale.current,
+                                                self.statistics.geneStats[kp]!.average))
+                                }
+                                HStack {
+                                    Text("  Highest:")
+                                    Text(String(format: "%.3f", locale: Locale.current,
+                                                self.statistics.geneStats[kp]!.max))
+                                }
+                            }
+                        }
+                    }
+                }
+                SceneView(scene: AppDelegate.shared.gameScene
+                    .settingGene(to: geneKeyPathSelection)
+                    .settingSelectionType(to: selectionTypeFunctionLookupTable[selectionType]!)
+                    .settingSpeed(to: speed))
+                    .frame(width: 1024, height: 700, alignment: .center)
+            }
         }.frame(width: 1250, height: 800, alignment: .center)
+            .onReceive(AppDelegate.shared.gameScene.$stats) { self.statistics = $0 }
     }
+
+    @State var statistics = Statistics()
 }
 struct SceneView: NSViewRepresentable {
     let scene: SKScene
-
-//    init(scene: SKScene) {
-//        self.scene = scene
-//    }
 
     init(scene: GameScene) {
         self.scene = scene
