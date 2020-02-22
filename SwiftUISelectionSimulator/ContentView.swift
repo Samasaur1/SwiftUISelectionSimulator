@@ -48,7 +48,7 @@ struct ContentView: View {
                             Text(self.geneKeyPathLabelLookupTable[kp]!)
                         }
                     }.labelsHidden().pickerStyle(PopUpButtonPickerStyle())
-                }.padding(5).background(Color.white.opacity(0.25)).cornerRadius(10)
+                }.padding(5).background(Color("ControlBackgroundColor")).cornerRadius(10)
                 VStack {
                     Text("Selection Type")
                     Picker("Selection Type", selection: $selectionType) {
@@ -56,7 +56,7 @@ struct ContentView: View {
                             Text(comp)
                         }
                     }.labelsHidden().pickerStyle(PopUpButtonPickerStyle())
-                }.padding(5).background(Color.white.opacity(0.25)).cornerRadius(10)
+                }.padding(5).background(Color("ControlBackgroundColor")).cornerRadius(10)
                 VStack {
                     Picker("Speed", selection: $speed) {
                         Text("􀊃 (0.5x)").tag(0.5)
@@ -65,13 +65,13 @@ struct ContentView: View {
                         Text("􀊌 (4x)").tag(4.0)
                         Text("􀊌 (8x)").tag(8.0)
                     }.labelsHidden().pickerStyle(SegmentedPickerStyle())
-                }.padding(5).background(Color.white.opacity(0.25)).cornerRadius(10)
+                }.padding(5).background(Color("ControlBackgroundColor")).cornerRadius(10)
                 Button(action: {
                     AppDelegate.shared.reset()
                 }) {
                     Text("Restart Simulation")
                 }
-            }.padding(5).background(Color.gray).cornerRadius(10)
+            }.padding(5).background(Color("ControlPanelBackgroundColor")).cornerRadius(10)
             HStack {
                 VStack {
                     Text("Statistics").underline().bold().font(.largeTitle)
@@ -129,8 +129,8 @@ struct SceneView: NSViewRepresentable {
 
     func makeNSView(context: NSViewRepresentableContext<SceneView>) -> SKView {
         let view = SKView(frame: .zero)
-        view.showsNodeCount = true
-        view.showsFPS = true
+        view.showsNodeCount = false
+        view.showsFPS = false
         view.presentScene(scene)
         return view
     }
