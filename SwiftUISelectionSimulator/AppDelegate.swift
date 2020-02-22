@@ -17,21 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         AppDelegate.shared = self
-        reset()
-    }
 
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
-    }
-
-    private(set) var gameScene: GameScene = GameScene()
-
-    static private(set) var shared: AppDelegate! = nil
-
-    func reset() {
-        if let w = window {
-            w.contentView = nil
-        }
         gameScene = GameScene()
         // Create the SwiftUI view that provides the window contents.
         let contentView = ContentView()
@@ -46,6 +32,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.setFrameAutosaveName("Main Window")
         window.contentView = NSHostingView(rootView: contentView)
         window.makeKeyAndOrderFront(nil)
+    }
+
+    func applicationWillTerminate(_ aNotification: Notification) {
+        // Insert code here to tear down your application
+    }
+
+    private(set) var gameScene: GameScene = GameScene()
+
+    static private(set) var shared: AppDelegate! = nil
+
+    func reset() {
+        if let w = window {
+            gameScene = GameScene()
+            w.contentView = NSHostingView(rootView: ContentView())
+        }
     }
 }
 

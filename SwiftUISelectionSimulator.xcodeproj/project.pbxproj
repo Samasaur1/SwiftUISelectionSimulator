@@ -300,6 +300,7 @@
 				CODE_SIGN_ENTITLEMENTS = SwiftUISelectionSimulator/SwiftUISelectionSimulator.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"SwiftUISelectionSimulator/Preview Content\"";
 				DEVELOPMENT_TEAM = G5WUYW3K85;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -324,6 +325,7 @@
 				CODE_SIGN_ENTITLEMENTS = SwiftUISelectionSimulator/SwiftUISelectionSimulator.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"SwiftUISelectionSimulator/Preview Content\"";
 				DEVELOPMENT_TEAM = G5WUYW3K85;
 				ENABLE_HARDENED_RUNTIME = YES;
